@@ -432,7 +432,15 @@ dotherax:
 
 		return true;
 	} else if (flags & (1 << 19)) { // -L
-		r_print_hex_from_bin (rp, str);
+		int len = strlen (str);
+		ut64 * const packed = (ut64 *)malloc ((sizeof (ut64) * len + 63) / 64);
+		if (packed == NULL) {
+			eprintf ("allocation failed\n");
+			return false;
+		}
+		int n = r_hex_pack_from_bin (packed, str);
+		r_print_packed (rp, packed, n);
+		free (packed);
 		return true;
 	}
 

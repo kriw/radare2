@@ -283,3 +283,17 @@ R_API int r_hex_str_is_valid(const char* str) {
 	}
 	return i;
 }
+
+R_API int r_hex_pack_from_bin(ut64 * const out, const char *bin_str) {
+	int i, j, index;
+	const int len = strlen (bin_str);
+	ut64 n;
+	for (i = len - 1, index = (len - 1) / 64; i >= 0; i -= 64, index--) {
+		n = 0;
+		for (j = 0; j < 64 && i - j >= 0; j++) {
+			n += (ut64) (bin_str[i - j] - '0') << j;
+		}
+		out[index] = n;
+	}
+	return (len + 63) / 64;
+}
